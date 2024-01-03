@@ -1,3 +1,4 @@
 virt_machine
+disassembler
 *.o
 .gdb_history
