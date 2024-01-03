@@ -36,6 +36,17 @@ uint16_t pop(stack *s) {
     return e;
 }
 
+void print_stack(stack *s) {
+    node *cur = s->head;
+    putchar('[');
+    while (cur != NULL) {
+        printf("0x%x,", cur->element);
+        cur = cur->next;
+    }
+    putchar(']');
+    putchar('\n');
+}
+
 bool isEmpty(stack *s) {
     return s->size == 0;
 }

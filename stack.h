@@ -17,6 +17,7 @@ typedef struct {
 
 void push(stack *s, uint16_t e);
 uint16_t pop(stack *s);
+void print_stack(stack *s);
 bool isEmpty(stack *s);
 void freeStack(stack *s);
 
