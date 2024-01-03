@@ -23,7 +23,7 @@ long read_binary(uint16_t **mem) {
     long bin_size = ftell(binary);
     rewind(binary);
 
-    prog = malloc(sizeof(uint16_t) * bin_size);
+    prog = malloc(bin_size > 0x8000 ? bin_size : 0x8000);
     fread(prog, sizeof(uint16_t), bin_size, binary);
 
     // close binary
