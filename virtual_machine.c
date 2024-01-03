@@ -5,9 +5,8 @@
 #include <string.h>
 
 #include "stack.h"
-
-#define BINARY_FILE "challenge.bin"
-#define REG_START 32768
+#include "helper.h"
+#include "constants.h"
 
 uint16_t reg[8];
 uint16_t *prog;
@@ -21,21 +20,8 @@ void move_imm(uint16_t n, uint16_t imm) {
 }
 
 int main() {
-    // open binary
-    FILE *binary = fopen(BINARY_FILE, "rb");
-    if (binary == NULL) {
-        fprintf(stderr, "Unable to load %s\n", BINARY_FILE);
-        return 1;
-    }
-
-    // determine binary size
-    fseek(binary, 0, SEEK_END);
-    long bin_size = ftell(binary);
-    rewind(binary);
-
     // read binary
-    prog = malloc(sizeof(uint16_t) * bin_size);
-    fread(prog, sizeof(uint16_t), bin_size, binary);
+    read_binary(&prog);
 
     // set registers
     memset(reg, 0, sizeof(reg));
@@ -54,9 +40,6 @@ int main() {
         // fetch
         instr = load(ip);
         // execute
-        // printf("\ninstr: %d\n", instr);
-        // printf("op %d (%d) %d (%d) %d (%d)\n", prog[ip+1], load(ip+1), prog[ip+2], load(ip+2), prog[ip+3], load(ip+3));
-        // printf("ip: %x\n", ip);
         switch (instr) {
             case 0: // halt
                 halt = true;
@@ -128,7 +111,7 @@ int main() {
                 push(&s, ip+2);
                 ip = load(ip+1)-1;
                 break;
-            case 18:
+            case 18: // ret
                 ip = pop(&s) - 1;
                 break;
             case 19: // out
@@ -152,9 +135,6 @@ int main() {
         }
         ip++;
     }
-
-    // close binary
-    fclose(binary);
 
     // free memory
     free(prog);
